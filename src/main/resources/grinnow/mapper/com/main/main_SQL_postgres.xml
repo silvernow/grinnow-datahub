@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mainMapper">
+		
+	<insert id="insertTreePrice" parameterType="map">
+        INSERT INTO tb_gnn_tree_price (
+		    tree_cd, tree_unit, tree_qty, tree_unit_price, tree_price,
+		    tree_addr_cd, basis_dt, unit_std_cd, start_area_id, end_area_id,
+		    arbor_root_cm, arbor_bst_cm, arbor_hei_mm, shrub_wid_mm, shrub_hei_mm,
+		    sap_root_cm, cre_dt, cre_id
+		) VALUES (
+		    #{treeCd},
+		    #{treeUnit},
+		    #{treeQty,jdbcType=INTEGER},
+		    #{treeUnitPrice,jdbcType=NUMERIC},
+		    #{treePrice,jdbcType=NUMERIC},
+		    #{treeAddrCd,jdbcType=INTEGER},
+		    TO_DATE(#{basisDt}, 'YYYY-MM-DD'),
+		    #{unitStdCd},
+		    #{startAreaId,jdbcType=INTEGER},
+		    #{endAreaId,jdbcType=INTEGER},
+		    #{arborRootCm,jdbcType=NUMERIC},
+		    #{arborBstCm,jdbcType=NUMERIC},
+		    #{arborHeiMm,jdbcType=NUMERIC},
+		    #{shrubWidMm,jdbcType=NUMERIC},
+		    #{shrubHeiMm,jdbcType=NUMERIC},
+		    #{sapRootCm,jdbcType=NUMERIC},
+		    NOW(),
+		    #{creId}
+		)
+</insert>
+
+</mapper>

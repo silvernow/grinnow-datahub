@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="commonMapper">
+	
+	<resultMap id="comCodeMap" type="ComCodeVO">
+		<result property="codeId" column="code_id"/>
+		<result property="code" column="code"/>
+		<result property="codeNm" column="code_nm"/>
+		<result property="codeDc" column="code_dc"/>
+	</resultMap>
+	
+	<!-- 공통코드서비스 리스트 -->
+	<select id="selectCommonCodeList" parameterType="ComSearchVO" resultMap="comCodeMap">
+ 		SELECT cd.code_id
+		     , cd.code
+		     , cd.code_nm
+		     , cd.code_dc
+          FROM tb_com_code_dtl cd INNER JOIN tb_com_code cc
+		                                  ON cd.code_id = cc.code_id
+         WHERE cc.use_yn = 'Y'
+           AND cd.code_id = #{condition}
+           <if test="condition2 != null and condition2 != ''">
+    	       AND cd.code != #{condition2}
+    	   </if> 
+           AND cd.use_yn = 'Y'
+         ORDER BY cd.sort_order ASC 
+	</select>
+	
+	<!-- 수집지역 코드 리스트 -->
+	<select id="selectCommonAreaList" parameterType="java.util.HashMap" resultMap="comCodeMap">
+		SELECT a.province_cd AS code
+		     , a.province_nm AS code_nm
+		  FROM tb_com_code_area a
+		 WHERE a.division_ty in ('0','1')		 
+         ORDER BY a.division_ty ASC, a.id ASC
+	</select>
+	
+</mapper>

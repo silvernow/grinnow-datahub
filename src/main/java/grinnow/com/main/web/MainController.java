@@ -17,6 +17,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.rte.fdl.property.EgovPropertyService;
 import grinnow.com.cmm.service.GnnMessageSource;
+import grinnow.com.common.amazon.MongoDbClient;
 import grinnow.com.common.service.CommonService;
 import grinnow.com.main.service.MainService;
 
@@ -40,6 +42,9 @@ public class MainController {
     
     @Resource(name = "commonService")
 	private CommonService commonService;
+    
+    @Resource(name = "mongoDbClient")
+    private MongoDbClient mongoDbClient;
     
     @Resource(name = "mainService")
 	private MainService mainService;
@@ -106,6 +111,19 @@ public class MainController {
         return result;
     }
 
+    @ResponseBody
+    @GetMapping("/checkMongo")
+    public Map<String, Object> checkMongo() {
+        Map<String, Object> res = new HashMap<>();
+        try {
+            mongoDbClient.ping(); // Mongo 연결 확인용 함수
+            res.put("status", "online");
+        } catch (Exception e) {
+            res.put("status", "offline");
+        }
+        return res;
+    }
+    
     private String getCellValue(Cell cell) {
         if (cell == null) return "";
         cell.setCellType(CellType.STRING);

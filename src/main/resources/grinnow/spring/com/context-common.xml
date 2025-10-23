@@ -74,4 +74,7 @@
 
     <alias name="local.MultiCommonsMultipartResolver" alias="multipartResolver" />
     <!-- <alias name="spring.RegularCommonsMultipartResolver" alias="multipartResolver" /> -->
+    
+    <!-- MongoDB 클라이언트 Bean 등록 -->
+	<bean id="mongoDbClient" class="grinnow.com.common.amazon.MongoDbClient" init-method="init"/>
 </beans>

@@ -49,7 +49,7 @@ public class MongoDbClient {
 
             mongoClient = MongoClients.create(settings);
             database = mongoClient.getDatabase(dbName);
-            collection = database.getCollection("tree_price");
+            collection = database.getCollection("treeprice");
 
             LOGGER.info("[MongoDB] Connection established successfully.");
 

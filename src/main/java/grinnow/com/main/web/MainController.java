@@ -100,7 +100,8 @@ public class MainController {
             insertCount = mainService.insertTreePriceList(dataList);
 
             result.put("result", "success");
-            result.put("count", insertCount);
+            result.put("pgCount", insertCount);
+            result.put("mongoCount", insertCount);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,15 +112,17 @@ public class MainController {
         return result;
     }
 
+
     @ResponseBody
     @GetMapping("/checkMongo")
     public Map<String, Object> checkMongo() {
         Map<String, Object> res = new HashMap<>();
         try {
-            mongoDbClient.ping(); // Mongo 연결 확인용 함수
+            mongoDbClient.ping();
             res.put("status", "online");
         } catch (Exception e) {
             res.put("status", "offline");
+            res.put("error", e.getMessage());
         }
         return res;
     }

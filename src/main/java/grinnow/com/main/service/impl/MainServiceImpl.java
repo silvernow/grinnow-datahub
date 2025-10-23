@@ -17,7 +17,7 @@ import grinnow.com.main.service.MainService;
 
 @Service("mainService")
 public class MainServiceImpl extends EgovAbstractServiceImpl implements MainService{
-
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainServiceImpl.class);
 	
 	@Resource(name = "propertiesService")
@@ -36,6 +36,7 @@ public class MainServiceImpl extends EgovAbstractServiceImpl implements MainServ
         	mainDao.insertTreePrice(map);
             cnt++;
         }
+        
         if(Globals.MONGO_USE_YN.equals("Y")) {
         	for (Map<String, Object> map : dataList) {
         		try {

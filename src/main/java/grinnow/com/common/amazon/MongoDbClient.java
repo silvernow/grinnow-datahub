@@ -19,14 +19,13 @@ import com.mongodb.client.MongoDatabase;
 
 import grinnow.com.cmm.service.Globals;
 
-/**
- * MongoDB Atlas (cloud.mongodb.com) 클라이언트
- * JDK 1.8 + eGovFramework + SLF4J 로깅
- */
 @Component("mongoDbClient")
 public class MongoDbClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MongoDbClient.class);
+
+    private MongoClient mongoClient;
+    private MongoDatabase database;
     private MongoCollection<Document> collection;
 
     @PostConstruct
@@ -39,46 +38,53 @@ public class MongoDbClient {
             String ssl = Globals.MONGO_SSL;
 
             String uri = String.format(
-            	    "mongodb+srv://%s:%s@%s/%s?retryWrites=true&w=majority&ssl=%s",
-            	    user, pw, cluster, dbName, ssl
-            	);
-            
-            LOGGER.info("[MongoDB] uri : {}", uri);
-            LOGGER.info("[MongoDB] Connecting to cluster: {}", cluster);
+                "mongodb+srv://%s:%s@%s/%s?retryWrites=true&w=majority&ssl=%s",
+                user, pw, cluster, dbName, ssl
+            );
 
             ConnectionString connectionString = new ConnectionString(uri);
             MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
                 .build();
 
-            MongoClient mongoClient = MongoClients.create(settings);
-            MongoDatabase database = mongoClient.getDatabase(dbName);
-            collection = database.getCollection("treeprice");
+            mongoClient = MongoClients.create(settings);
+            database = mongoClient.getDatabase(dbName);
+            collection = database.getCollection("tree_price");
 
-            LOGGER.info("[MongoDB] Connection established successfully (DB: {}, Collection: treeprice)", dbName);
+            LOGGER.info("[MongoDB] Connection established successfully.");
 
         } catch (Exception e) {
-            LOGGER.error("[MongoDB] Connection failed: {}", e.getMessage(), e);
+            LOGGER.error("[MongoDB] Connection failed: {}", e.getMessage());
         }
     }
 
     /**
-     * Map 형태 데이터를 MongoDB에 저장
+     * MongoDB 연결 상태 확인용 ping 메서드
+     */
+    public void ping() {
+        if (database == null) {
+            throw new IllegalStateException("MongoDB not initialized.");
+        }
+
+        Document pingCommand = new Document("ping", 1);
+        Document result = database.runCommand(pingCommand);
+        LOGGER.info("[MongoDB] Ping result: {}", result.toJson());
+    }
+
+    /**
+     * Map 형태의 데이터를 MongoDB에 저장
      */
     public void saveTreePrice(Map<String, Object> map) {
         try {
             if (collection == null) {
-                LOGGER.warn("[MongoDB] Collection not initialized. Insert skipped.");
-                return;
+                throw new IllegalStateException("MongoDB collection is not initialized.");
             }
-
             Document doc = new Document(map);
             doc.put("sync_time", LocalDateTime.now().toString());
             collection.insertOne(doc);
-
-            LOGGER.debug("[MongoDB] Inserted document: {}", doc.toJson());
+            LOGGER.info("[MongoDB] Document inserted successfully: {}", doc);
         } catch (Exception e) {
-            LOGGER.error("[MongoDB] Insert failed: {}", e.getMessage(), e);
+            LOGGER.error("[MongoDB] Insert failed: {}", e.getMessage());
         }
     }
 }

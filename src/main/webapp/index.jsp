@@ -16,7 +16,6 @@
 		<h1>🌿 수목시세 수집서버</h1>
 		<p>Tree Price Data Collector & MongoDB Synchronizer</p>
 	</header>
-
 	<main>
 		<section class="section">
 			<h2>📦 시스템 개요</h2>
@@ -51,7 +50,6 @@
 			</div>
 		</section>
 	</main>
-
 	<div id="overlay">
 		<div id="progressBox">
 	    	<div id="loadingIcon">🌿</div>
@@ -62,7 +60,6 @@
 	        <div id="progressText">잠시만 기다려주세요...</div>
 	    </div>
 	</div>
-
 	<footer>
 		Copyright © 2025 Grinnow Data Systems. All rights reserved.
 	</footer>

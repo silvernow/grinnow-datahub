@@ -69,35 +69,62 @@ public class MainController {
             Workbook workbook = WorkbookFactory.create(is);
             Sheet sheet = workbook.getSheetAt(0);
 
-            List<Map<String, Object>> dataList = new ArrayList<>();
+            List<Map<String, Object>> postDataList = new ArrayList<>();
+            List<Map<String, Object>> mongoDataList = new ArrayList<>();
 
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
                 if (row == null) continue;
 
-                Map<String, Object> map = new HashMap<>();
-                map.put("treeCd", safeString(getCellValue(row.getCell(0))));
-                map.put("treeUnit", safeString(getCellValue(row.getCell(1))));
-                map.put("treeQty", safeInteger(getCellValue(row.getCell(2))));
-                map.put("treeUnitPrice", safeBigDecimal(getCellValue(row.getCell(3))));
-                map.put("treePrice", safeBigDecimal(getCellValue(row.getCell(4))));
-                map.put("treeAddrCd", safeInteger(getCellValue(row.getCell(5))));
-                map.put("basisDt", isNull(getCellValue(row.getCell(6))));
-                map.put("unitStdCd", safeString(getCellValue(row.getCell(7))));
-                map.put("startAreaId", safeInteger(getCellValue(row.getCell(8))));
-                map.put("endAreaId", safeInteger(getCellValue(row.getCell(9))));
-                map.put("arborRootCm", safeBigDecimal(getCellValue(row.getCell(10))));
-                map.put("arborBstCm", safeBigDecimal(getCellValue(row.getCell(11))));
-                map.put("arborHeiMm", safeBigDecimal(getCellValue(row.getCell(12))));
-                map.put("shrubWidMm", safeBigDecimal(getCellValue(row.getCell(13))));
-                map.put("shrubHeiMm", safeBigDecimal(getCellValue(row.getCell(14))));
-                map.put("sapRootCm", safeBigDecimal(getCellValue(row.getCell(15))));
-                map.put("creId", "excel");
-                dataList.add(map);
+                Map<String, Object> postMap = new HashMap<>();
+                postMap.put("treeCd", safeString(getCellValue(row.getCell(0))));
+                postMap.put("treeUnit", safeString(getCellValue(row.getCell(1))));
+                postMap.put("treeQty", safeInteger(getCellValue(row.getCell(2))));
+                postMap.put("treeUnitPrice", safeBigDecimal(getCellValue(row.getCell(3))));
+                postMap.put("treePrice", safeBigDecimal(getCellValue(row.getCell(4))));
+                postMap.put("treeAddrCd", safeInteger(getCellValue(row.getCell(5))));
+                postMap.put("basisDt", isNull(getCellValue(row.getCell(6))));
+                postMap.put("unitStdCd", safeString(getCellValue(row.getCell(7))));
+                postMap.put("startAreaId", safeInteger(getCellValue(row.getCell(8))));
+                postMap.put("endAreaId", safeInteger(getCellValue(row.getCell(9))));
+                postMap.put("arborRootCm", safeBigDecimal(getCellValue(row.getCell(10))));
+                postMap.put("arborBstCm", safeBigDecimal(getCellValue(row.getCell(11))));
+                postMap.put("arborHeiMm", safeBigDecimal(getCellValue(row.getCell(12))));
+                postMap.put("shrubWidMm", safeBigDecimal(getCellValue(row.getCell(13))));
+                postMap.put("shrubHeiMm", safeBigDecimal(getCellValue(row.getCell(14))));
+                postMap.put("sapRootCm", safeBigDecimal(getCellValue(row.getCell(15))));
+                postMap.put("creId", "excel");
+                postDataList.add(postMap);
+                
+                Map<String, Object> mongoMap = new HashMap<>();
+                mongoMap.put("tree_cd", safeString(getCellValue(row.getCell(0))));
+                mongoMap.put("tree_unit", safeString(getCellValue(row.getCell(1))));
+                mongoMap.put("tree_unit_nm", safeString(getCellValue(row.getCell(2))));
+                mongoMap.put("tree_qty", safeInteger(getCellValue(row.getCell(3))));
+                mongoMap.put("tree_unit_price", safeBigDecimal(getCellValue(row.getCell(4))));
+                mongoMap.put("tree_price", safeBigDecimal(getCellValue(row.getCell(5))));
+                mongoMap.put("tree_addr_cd", safeInteger(getCellValue(row.getCell(6))));
+                mongoMap.put("tree_addr_cd_nm", safeString(getCellValue(row.getCell(7))));
+                mongoMap.put("basis_dt", isNull(getCellValue(row.getCell(8))));
+                mongoMap.put("unit_std_cd", safeString(getCellValue(row.getCell(9))));
+                mongoMap.put("unit_std_cd_nm", safeString(getCellValue(row.getCell(10))));
+                mongoMap.put("start_area_id", safeInteger(getCellValue(row.getCell(11))));
+                mongoMap.put("start_area_id_nm", safeString(getCellValue(row.getCell(12))));
+                mongoMap.put("end_area_id", safeInteger(getCellValue(row.getCell(13))));
+                mongoMap.put("end_area_id_nm", safeString(getCellValue(row.getCell(14))));
+                mongoMap.put("arbor_root_cm", safeBigDecimal(getCellValue(row.getCell(15))));
+                mongoMap.put("arbor_bst_cm", safeBigDecimal(getCellValue(row.getCell(16))));
+                mongoMap.put("arbor_hei_mm", safeBigDecimal(getCellValue(row.getCell(17))));
+                mongoMap.put("shrub_wid_mm", safeBigDecimal(getCellValue(row.getCell(18))));
+                mongoMap.put("shrub_hei_mm", safeBigDecimal(getCellValue(row.getCell(19))));
+                mongoMap.put("sap_root_cm", safeBigDecimal(getCellValue(row.getCell(20))));
+                mongoMap.put("tree_std_nm", safeString(getCellValue(row.getCell(21))));
+                mongoMap.put("cre_id", "excel");
+                mongoDataList.add(mongoMap);
             }
 
             workbook.close();
-            insertCount = mainService.insertTreePriceList(dataList);
+            insertCount = mainService.insertTreePriceList(postDataList, mongoDataList);
 
             result.put("result", "success");
             result.put("pgCount", insertCount);

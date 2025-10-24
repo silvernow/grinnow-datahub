@@ -30,15 +30,15 @@ public class MainServiceImpl extends EgovAbstractServiceImpl implements MainServ
     private MainDao mainDao;
 	
 	@Override
-	public int insertTreePriceList(List<Map<String, Object>> dataList) throws Exception {
+	public int insertTreePriceList(List<Map<String, Object>> postDataList, List<Map<String, Object>> mongoDataList) throws Exception {
 		int cnt = 0;
-        for (Map<String, Object> map : dataList) {
+        for (Map<String, Object> map : postDataList) {
         	mainDao.insertTreePrice(map);
             cnt++;
         }
         
         if(Globals.MONGO_USE_YN.equals("Y")) {
-        	for (Map<String, Object> map : dataList) {
+        	for (Map<String, Object> map : mongoDataList) {
         		try {
         			mongoDbClient.saveTreePrice(map);
         		}catch (Exception e) {

@@ -161,7 +161,7 @@ Please open an issue before making major changes.
 
 Kwon Mingwan
 
-CTO, GreenTrader
+CTO, Grintrader
 
 Grinnow Project Maintainer
 
